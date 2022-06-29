@@ -34,9 +34,65 @@ namespace ReadExcelSheet
         public static void Read02(string xlsxPath)
         {
 
-            DataSet ds = new();
-            List<CSLCekilisSonucu> CSLCekilisSonuclariListesi = new List<CSLCekilisSonucu>();
-            List<SLCekilisSonucu> SLCekilisSonuclariListesi = new List<SLCekilisSonucu>();
+            List<CSLCekilisSonucu> CSLCekilisSonuclariListesi;
+            List<SLCekilisSonucu> SLCekilisSonuclariListesi;
+            using (DataSet ds = GetExcelToDataSet(xlsxPath))
+            {
+                CSLCekilisSonuclariListesi = GetCSLCekilisSonuclariListesi(ds.Tables[(int)SheetName.CSL_Sonuclari]);
+                SLCekilisSonuclariListesi = getSLCekilisSonuclariListesi(ds.Tables[(int)SheetName.SL_Sonuclari]);
+            }
+                        
+            List<CSLCikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi);
+            
+            var KolonAdat = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
+                   .OrderBy(x => x.CikmaAdati)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+            Console.WriteLine($"---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
+
+            var KolonSayi = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
+                   .OrderBy(x => x.CikmaSayisi)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+            Console.WriteLine($"---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
+
+            var ary = CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
+                   .OrderBy(x => x.CikmaAdati)
+                   .Take(6)
+                   .Select(x => x.Numara.ToString());
+            Console.WriteLine($"---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
+
+            ary = CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonSayi.Any(a => a == x.Numara.ToString()))
+                   .OrderBy(x => x.CikmaSayisi)
+                   .Take(6)
+                   .Select(x => x.Numara.ToString());
+            Console.WriteLine($"---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+
+            var KolonTumu = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
+                   .OrderBy(x => x.CikmaAdati)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+            Console.WriteLine($"---Tümü  En Az Çıkma Adatına göre: {string.Join(",", KolonTumu)}");
+
+            ary = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
+                   .OrderBy(x => x.CikmaSayisi)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+            Console.WriteLine($"---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+
+
+
+
+            Console.ReadLine();
+        }
+
+
+        public static DataSet GetExcelToDataSet(string xlsxPath)
+        {
 
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             using (var stream = File.Open(xlsxPath, FileMode.Open, FileAccess.Read))
@@ -44,19 +100,23 @@ namespace ReadExcelSheet
                 using (var reader = ExcelReaderFactory.CreateReader(stream))
                 {
 
-                    ds = reader.AsDataSet(
+                    return reader.AsDataSet(
                         new ExcelDataSetConfiguration()
                         {
                             ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
                             {
-                                UseHeaderRow = true,
+                                UseHeaderRow = true
                             }
                         }
                         );
                 }
             }
+        }
 
-            CSLCekilisSonuclariListesi = ds.Tables[(int)SheetName.CSL_Sonuclari]
+
+        public static List<CSLCekilisSonucu> GetCSLCekilisSonuclariListesi(DataTable dt)
+        {
+            return dt
             .AsEnumerable()
             .Select(x => new CSLCekilisSonucu
             {
@@ -72,8 +132,11 @@ namespace ReadExcelSheet
                 SuperStar = double.TryParse(x[CSLKolonlari.SuperStar.ToString()]?.ToString(), out double val) ? val : 0
             })
             .ToList();
+        }
 
-            SLCekilisSonuclariListesi = ds.Tables[(int)SheetName.SL_Sonuclari]
+        public static List<SLCekilisSonucu> getSLCekilisSonuclariListesi(DataTable dt)
+        {
+            return dt
            .AsEnumerable()
            .Select(x => new SLCekilisSonucu
            {
@@ -87,16 +150,15 @@ namespace ReadExcelSheet
                Kolon6 = x.Field<double>(CSLKolonlari.Kolon6.ToString())
            })
            .ToList();
+        }
 
-            ds.Dispose();
-
-
-
+        public static List<CSLCikanNumara> getCSLCikanNumaraListesi(List<CSLCekilisSonucu> CSLCekilisSonuclariListesi)
+        {
             List<CSLCikanNumara> CSLCikanNumaraListesi = new List<CSLCikanNumara>();
 
             CSLCekilisSonuclariListesi.ForEach(x =>
             {
-                var Hafta = double.Parse(x.GetType().GetProperty("Hafta").GetValue(x).ToString());
+                var Hafta = double.Parse(x.GetType().GetProperty("Hafta")?.GetValue(x)?.ToString() ?? "0");
 
                 x.GetType()
                 .GetProperties()
@@ -120,7 +182,6 @@ namespace ReadExcelSheet
                             cikanno = CSLCikanNumaraListesi
                                                         .Where(z => z.Numara == numara && z.KolonTipi == KolonTipi)
                                                         .FirstOrDefault();
-
                             if (cikanno == null)
                             {
                                 var yeniNo = new CSLCikanNumara()
@@ -154,103 +215,8 @@ namespace ReadExcelSheet
                     }
                 });
             });
-            Console.WriteLine("---Kolon En Az Adat");
-            CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => x.CikmaAdati)
-                   .Take(6)
-                   .ToList()
-                   .ForEach(x => Console.WriteLine(x.Numara));
-
-            Console.WriteLine("---Kolon En Az Çıkma Sayısı");
-            CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => x.CikmaSayisi)
-                   .Take(6)
-                   .ToList()
-                   .ForEach(x => Console.WriteLine(x.Numara));            
-
-            Console.WriteLine("---SüperStar En Az Çıkma Adat");
-            CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString())
-                   .OrderBy(x => x.CikmaAdati)
-                   .Take(6)
-                   .ToList()
-                   .ForEach(x => Console.WriteLine(x.Numara));
-
-            Console.WriteLine("---SüperStar En Az Çıkma Sayısı");
-            CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString())
-                   .OrderBy(x => x.CikmaSayisi)
-                   .Take(6)
-                   .ToList()
-                   .ForEach(x => Console.WriteLine(x.Numara));
-
-            Console.WriteLine("---Tümü En Az Çıkma Adat");
-            CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
-                   .OrderBy(x => x.CikmaAdati)
-                   .Take(6)
-                   .ToList()
-                   .ForEach(x => Console.WriteLine(x.Numara));
-
-            Console.WriteLine("---Tümü En Az Çıkma Sayisi");
-            CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
-                   .OrderBy(x => x.CikmaSayisi)
-                   .Take(6)
-                   .ToList()
-                   .ForEach(x => Console.WriteLine(x.Numara));
-
-
-
-
-            Console.ReadLine();
+            return CSLCikanNumaraListesi;
         }
-
-
-
-
-        public static List<T> ReadData<T>(DataTable dt)
-        {
-
-            var configuration = new MapperConfiguration(cfg => { });
-            Mapper mp = new Mapper(configuration);
-
-            List<T> result = mp.Map<List<T>>(dt);
-
-
-            //aa.Map(dt, typeof(DataTable), T);
-
-
-            //return Mapper.DynamicMap<IDataReader, List<T>>(dt.CreateDataReader());
-            return result;
-        }
-
-
-
-        public static void Read01(string xlsxPath)
-        {
-
-
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            using (var stream = File.Open(xlsxPath, FileMode.Open, FileAccess.Read))
-            {
-                using (var reader = ExcelReaderFactory.CreateReader(stream))
-                {
-
-
-                    do
-                    {
-                        while (reader.Read()) //Each ROW
-                        {
-                            for (int column = 0; column < reader.FieldCount; column++)
-                            {
-                                //Console.WriteLine(reader.GetString(column));//Will blow up if the value is decimal etc. 
-                                Console.WriteLine(reader.GetValue(column));//Get Value returns object
-                            }
-                        }
-                    } while (reader.NextResult()); //Move to NEXT SHEET
-                }
-            }
-
-        }
-
-
     }
 }
 
