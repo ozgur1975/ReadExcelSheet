@@ -41,51 +41,26 @@ namespace ReadExcelSheet
                 CSLCekilisSonuclariListesi = GetCSLCekilisSonuclariListesi(ds.Tables[(int)SheetName.CSL_Sonuclari]);
                 SLCekilisSonuclariListesi = getSLCekilisSonuclariListesi(ds.Tables[(int)SheetName.SL_Sonuclari]);
             }
-                        
+
             List<CSLCikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi);
-            
-            var KolonAdat = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => x.CikmaAdati)
-                   .Take(6)
-                   .OrderBy(x => x.Numara)
-                   .Select(x => x.Numara.ToString());
+
+            var KolonAdat = getKolonAdat(CSLCikanNumaraListesi);                                
             Console.WriteLine($"---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
 
-            var KolonSayi = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => x.CikmaSayisi)
-                   .Take(6)
-                   .OrderBy(x => x.Numara)
-                   .Select(x => x.Numara.ToString());
+            var KolonSayi = getKolonSayi(CSLCikanNumaraListesi);            
             Console.WriteLine($"---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
 
-            var ary = CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
-                   .OrderBy(x => x.CikmaAdati)
-                   .Take(6)
-                   .Select(x => x.Numara.ToString());
+            var ary = GetSuperStarAdat(CSLCikanNumaraListesi, KolonAdat);            
             Console.WriteLine($"---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
 
-            ary = CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonSayi.Any(a => a == x.Numara.ToString()))
-                   .OrderBy(x => x.CikmaSayisi)
-                   .Take(6)
-                   .Select(x => x.Numara.ToString());
+            ary = GetSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);            
             Console.WriteLine($"---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
 
-            var KolonTumu = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
-                   .OrderBy(x => x.CikmaAdati)
-                   .Take(6)
-                   .OrderBy(x => x.Numara)
-                   .Select(x => x.Numara.ToString());
+            var KolonTumu = getTumuAdat(CSLCikanNumaraListesi);
             Console.WriteLine($"---Tümü  En Az Çıkma Adatına göre: {string.Join(",", KolonTumu)}");
 
-            ary = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
-                   .OrderBy(x => x.CikmaSayisi)
-                   .Take(6)
-                   .OrderBy(x => x.Numara)
-                   .Select(x => x.Numara.ToString());
+            ary = getTumuSayi(CSLCikanNumaraListesi);            
             Console.WriteLine($"---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
-
-
-
 
             Console.ReadLine();
         }
@@ -217,6 +192,62 @@ namespace ReadExcelSheet
             });
             return CSLCikanNumaraListesi;
         }
+
+        public static IEnumerable<string> getKolonAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
+                   .OrderBy(x => x.CikmaAdati)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+            
+        }
+
+        public static IEnumerable<string> getKolonSayi(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
+                       .OrderBy(x => x.CikmaSayisi)
+                       .Take(6)
+                       .OrderBy(x => x.Numara)
+                       .Select(x => x.Numara.ToString());            
+        }
+        public static IEnumerable<string> GetSuperStarAdat(List<CSLCikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
+                               .OrderBy(x => x.CikmaAdati)
+                               .Take(6)
+                               .Select(x => x.Numara.ToString());            
+        }
+        public static IEnumerable<string> GetSuperStarSayi(List<CSLCikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonSayi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonSayi.Any(a => a == x.Numara.ToString()))
+                       .OrderBy(x => x.CikmaSayisi)
+                       .Take(6)
+                       .Select(x => x.Numara.ToString());            
+        }
+
+        public static IEnumerable<string> getTumuAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
+                               .OrderBy(x => x.CikmaAdati)
+                               .Take(6)
+                               .OrderBy(x => x.Numara)
+                               .Select(x => x.Numara.ToString());
+        }
+        public static IEnumerable<string> getTumuSayi(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
+                       .OrderBy(x => x.CikmaSayisi)
+                       .Take(6)
+                       .OrderBy(x => x.Numara)
+                       .Select(x => x.Numara.ToString());            
+        }
+
+        //---
+        
+        
+        //---
+
     }
 }
 
