@@ -47,18 +47,23 @@ namespace ReadExcelSheet
             var KolonAdat = getKolonAdat(CSLCikanNumaraListesi);                                
             Console.WriteLine($"---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
 
-            var KolonSayi = getKolonSayi(CSLCikanNumaraListesi);            
-            Console.WriteLine($"---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
+            var KolonveJokerAdat = getKolonveJokerAdat(CSLCikanNumaraListesi);
+            Console.WriteLine($"---Kolon ve Joker En Az Çıkma Adatına göre: {string.Join(",", KolonveJokerAdat)}");
 
-            var ary = GetSuperStarAdat(CSLCikanNumaraListesi, KolonAdat);            
+            var ary = GetSuperStarAdat(CSLCikanNumaraListesi, KolonAdat);
             Console.WriteLine($"---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
-
-            ary = GetSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);            
-            Console.WriteLine($"---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
 
             var KolonTumu = getTumuAdat(CSLCikanNumaraListesi);
             Console.WriteLine($"---Tümü  En Az Çıkma Adatına göre: {string.Join(",", KolonTumu)}");
 
+            Console.WriteLine("");
+
+            var KolonSayi = getKolonSayi(CSLCikanNumaraListesi);            
+            Console.WriteLine($"---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
+            
+            ary = GetSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);            
+            Console.WriteLine($"---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+            
             ary = getTumuSayi(CSLCikanNumaraListesi);            
             Console.WriteLine($"---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
 
@@ -196,11 +201,23 @@ namespace ReadExcelSheet
         public static IEnumerable<string> getKolonAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => x.CikmaAdati)
+                   .OrderBy(x => x.CikmaAdati / x.CikmaSayisi)
                    .Take(6)
                    .OrderBy(x => x.Numara)
                    .Select(x => x.Numara.ToString());
             
+        }
+
+        public static IEnumerable<string> getKolonveJokerAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
+                .GroupBy(x=> x.Numara)
+                .Select(group=> new {Numara = group.Key, CikmaAdati = group.Sum(item => item.CikmaAdati), CikmaSayisi= group.Sum(item=> item.CikmaSayisi) })
+                   .OrderBy(x => x.CikmaAdati / x.CikmaSayisi)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+
         }
 
         public static IEnumerable<string> getKolonSayi(List<CSLCikanNumara> CSLCikanNumaraListesi)
@@ -214,7 +231,7 @@ namespace ReadExcelSheet
         public static IEnumerable<string> GetSuperStarAdat(List<CSLCikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
-                               .OrderBy(x => x.CikmaAdati)
+                               .OrderBy(x => x.CikmaAdati/x.CikmaSayisi)
                                .Take(6)
                                .Select(x => x.Numara.ToString());            
         }
@@ -229,7 +246,7 @@ namespace ReadExcelSheet
         public static IEnumerable<string> getTumuAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
-                               .OrderBy(x => x.CikmaAdati)
+                               .OrderBy(x => x.CikmaAdati/x.CikmaSayisi)
                                .Take(6)
                                .OrderBy(x => x.Numara)
                                .Select(x => x.Numara.ToString());
