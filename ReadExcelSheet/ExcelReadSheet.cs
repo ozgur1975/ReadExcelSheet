@@ -1,11 +1,5 @@
-﻿using AutoMapper;
-using ExcelDataReader;
-using System;
-using System.Collections.Generic;
+﻿using ExcelDataReader;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReadExcelSheet
 {
@@ -31,6 +25,18 @@ namespace ReadExcelSheet
             Joker = 8,
             SuperStar = 9
         }
+
+        enum SLKolonlari
+        {
+            Hafta = 0,
+            Tarih = 1,
+            Kolon1 = 2,
+            Kolon2 = 3,
+            Kolon3 = 4,
+            Kolon4 = 5,
+            Kolon5 = 6,
+            Kolon6 = 7,            
+        }
         public static void Read02(string xlsxPath)
         {
 
@@ -42,30 +48,42 @@ namespace ReadExcelSheet
                 SLCekilisSonuclariListesi = getSLCekilisSonuclariListesi(ds.Tables[(int)SheetName.SL_Sonuclari]);
             }
 
-            List<CSLCikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi);
+            Console.WriteLine($"---Çılgın Sayısal Loto Hesaplanan Hafta: {CSLCekilisSonuclariListesi.Count}---");
 
-            var KolonAdat = getKolonAdat(CSLCikanNumaraListesi);                                
-            Console.WriteLine($"---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
+            List<CikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi);
 
-            var KolonveJokerAdat = getKolonveJokerAdat(CSLCikanNumaraListesi);
-            Console.WriteLine($"---Kolon ve Joker En Az Çıkma Adatına göre: {string.Join(",", KolonveJokerAdat)}");
+            var KolonAdat = getCSLKolonAdat(CSLCikanNumaraListesi);                                
+            Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
 
-            var ary = GetSuperStarAdat(CSLCikanNumaraListesi, KolonAdat);
-            Console.WriteLine($"---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
+            var KolonveJokerAdat = getCSLKolonveJokerAdat(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre: {string.Join(",", KolonveJokerAdat)}");
 
-            var KolonTumu = getTumuAdat(CSLCikanNumaraListesi);
-            Console.WriteLine($"---Tümü  En Az Çıkma Adatına göre: {string.Join(",", KolonTumu)}");
+            var ary = GetCSLSuperStarAdat(CSLCikanNumaraListesi, KolonAdat);
+            Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
+
+            var Tumu = getCSLTumuAdat(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Tümü  En Az Çıkma Adatına göre: {string.Join(",", Tumu)}");
 
             Console.WriteLine("");
 
-            var KolonSayi = getKolonSayi(CSLCikanNumaraListesi);            
-            Console.WriteLine($"---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
+            var KolonSayi = getCSLKolonSayi(CSLCikanNumaraListesi);            
+            Console.WriteLine($"   ---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
             
-            ary = GetSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);            
-            Console.WriteLine($"---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+            ary = GetCSLSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);            
+            Console.WriteLine($"   ---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
             
-            ary = getTumuSayi(CSLCikanNumaraListesi);            
-            Console.WriteLine($"---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+            ary = getCSLTumuSayi(CSLCikanNumaraListesi);            
+            Console.WriteLine($"   ---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+
+            Console.WriteLine("");
+            Console.WriteLine($"---Süper Loto Hesaplanan Hafta: {SLCekilisSonuclariListesi.Count}---");
+
+            List<CikanNumara> SLCikanNumaraListesi = getSLCikanNumaraListesi(SLCekilisSonuclariListesi);
+
+            var SLTumu = getSLTumuAdat(SLCikanNumaraListesi);
+            Console.WriteLine($"---Süper Loto En Az Çıkma Adatına göre: {string.Join(",", SLTumu)}");
+            SLTumu = getSLTumuSayi(SLCikanNumaraListesi);
+            Console.WriteLine($"---Süper Loto En Az Çıkma sayısına göre: {string.Join(",", SLTumu)}");
 
             Console.ReadLine();
         }
@@ -132,9 +150,9 @@ namespace ReadExcelSheet
            .ToList();
         }
 
-        public static List<CSLCikanNumara> getCSLCikanNumaraListesi(List<CSLCekilisSonucu> CSLCekilisSonuclariListesi)
+        public static List<CikanNumara> getCSLCikanNumaraListesi(List<CSLCekilisSonucu> CSLCekilisSonuclariListesi)
         {
-            List<CSLCikanNumara> CSLCikanNumaraListesi = new List<CSLCikanNumara>();
+            List<CikanNumara> CSLCikanNumaraListesi = new List<CikanNumara>();
 
             CSLCekilisSonuclariListesi.ForEach(x =>
             {
@@ -146,7 +164,7 @@ namespace ReadExcelSheet
                 .ForEach(y =>
                 {
                     string KolonTipi = "";
-                    CSLCikanNumara? cikanno;
+                    CikanNumara? cikanno;
                     if (y.Name == CSLKolonlari.SuperStar.ToString())
                         KolonTipi = CSLKolonlari.SuperStar.ToString();
                     else if (y.Name == CSLKolonlari.Joker.ToString())
@@ -164,32 +182,19 @@ namespace ReadExcelSheet
                                                         .FirstOrDefault();
                             if (cikanno == null)
                             {
-                                var yeniNo = new CSLCikanNumara()
+                                var yeniNo = new CikanNumara()
                                 {
                                     KolonTipi = KolonTipi,
                                     Numara = numara,
                                     CikmaAdati = Hafta,
                                     CikmaSayisi = 1
                                 };
-                                CSLCikanNumaraListesi.Add(yeniNo);
-                                yeniNo = new CSLCikanNumara()
-                                {
-                                    KolonTipi = "Tumu",
-                                    Numara = numara,
-                                    CikmaAdati = Hafta,
-                                    CikmaSayisi = 1
-                                };
-                                CSLCikanNumaraListesi.Add(yeniNo);
+                                CSLCikanNumaraListesi.Add(yeniNo);                               
                             }
                             else
                             {
                                 cikanno.CikmaSayisi++;
-                                cikanno.CikmaAdati += Hafta;
-                                cikanno = CSLCikanNumaraListesi
-                                                       .Where(z => z.Numara == numara && z.KolonTipi == "Tumu")
-                                                       .FirstOrDefault();
-                                cikanno.CikmaSayisi++;
-                                cikanno.CikmaAdati += Hafta;
+                                cikanno.CikmaAdati += Hafta;                              
                             }
                         }
                     }
@@ -198,7 +203,7 @@ namespace ReadExcelSheet
             return CSLCikanNumaraListesi;
         }
 
-        public static IEnumerable<string> getKolonAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getCSLKolonAdat(List<CikanNumara> CSLCikanNumaraListesi)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
                    .OrderBy(x => x.CikmaAdati / x.CikmaSayisi)
@@ -207,8 +212,16 @@ namespace ReadExcelSheet
                    .Select(x => x.Numara.ToString());
             
         }
+        public static IEnumerable<string> getCSLKolonSayi(List<CikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
+                       .OrderBy(x => x.CikmaSayisi)
+                       .Take(6)
+                       .OrderBy(x => x.Numara)
+                       .Select(x => x.Numara.ToString());
+        }
 
-        public static IEnumerable<string> getKolonveJokerAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getCSLKolonveJokerAdat(List<CikanNumara> CSLCikanNumaraListesi)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
                 .GroupBy(x=> x.Numara)
@@ -219,23 +232,27 @@ namespace ReadExcelSheet
                    .Select(x => x.Numara.ToString());
 
         }
-
-        public static IEnumerable<string> getKolonSayi(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getCSLKolonveJokerSayi(List<CikanNumara> CSLCikanNumaraListesi)
         {
-            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                       .OrderBy(x => x.CikmaSayisi)
-                       .Take(6)
-                       .OrderBy(x => x.Numara)
-                       .Select(x => x.Numara.ToString());            
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
+                .GroupBy(x => x.Numara)
+                .Select(group => new { Numara = group.Key, CikmaAdati = group.Sum(item => item.CikmaAdati), CikmaSayisi = group.Sum(item => item.CikmaSayisi) })
+                .OrderBy(x => x.CikmaSayisi)
+                .Take(6)
+                .OrderBy(x => x.Numara)
+                .Select(x => x.Numara.ToString());
+
         }
-        public static IEnumerable<string> GetSuperStarAdat(List<CSLCikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
+
+
+        public static IEnumerable<string> GetCSLSuperStarAdat(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
                                .OrderBy(x => x.CikmaAdati/x.CikmaSayisi)
                                .Take(6)
                                .Select(x => x.Numara.ToString());            
         }
-        public static IEnumerable<string> GetSuperStarSayi(List<CSLCikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonSayi)
+        public static IEnumerable<string> GetCSLSuperStarSayi(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonSayi)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonSayi.Any(a => a == x.Numara.ToString()))
                        .OrderBy(x => x.CikmaSayisi)
@@ -243,28 +260,95 @@ namespace ReadExcelSheet
                        .Select(x => x.Numara.ToString());            
         }
 
-        public static IEnumerable<string> getTumuAdat(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        
+
+        public static IEnumerable<string> getCSLTumuAdat(List<CikanNumara> CSLCikanNumaraListesi)
         {
-            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
-                               .OrderBy(x => x.CikmaAdati/x.CikmaSayisi)
+            return CSLCikanNumaraListesi
+                .GroupBy(x => x.Numara)
+                .Select(group => new { Numara = group.Key, CikmaAdati = group.Sum(item => item.CikmaAdati), CikmaSayisi = group.Sum(item => item.CikmaSayisi) })
+                .OrderBy(x => x.CikmaAdati / x.CikmaSayisi)
+                .Take(6)
+                .OrderBy(x => x.Numara)
+                .Select(x => x.Numara.ToString());
+        }
+        public static IEnumerable<string> getCSLTumuSayi(List<CikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi
+                .GroupBy(x => x.Numara)
+                .Select(group => new { Numara = group.Key, CikmaAdati = group.Sum(item => item.CikmaAdati), CikmaSayisi = group.Sum(item => item.CikmaSayisi) })
+                .OrderBy(x => x.CikmaSayisi)
+                .Take(6)
+                .OrderBy(x => x.Numara)
+                .Select(x => x.Numara.ToString());
+        }
+
+        public static List<CikanNumara> getSLCikanNumaraListesi(List<SLCekilisSonucu> SLCekilisSonuclariListesi)
+        {
+            List<CikanNumara> SLCikanNumaraListesi = new List<CikanNumara>();
+
+            SLCekilisSonuclariListesi.ForEach(x =>
+            {
+                var Hafta = double.Parse(x.GetType().GetProperty("Hafta")?.GetValue(x)?.ToString() ?? "0");
+
+                x.GetType()
+                .GetProperties()
+                .ToList()
+                .ForEach(y =>
+                {
+                    string KolonTipi = "";
+                    CikanNumara? cikanno;
+
+                    if (y.Name.Contains("Kolon"))
+                        KolonTipi = "Kolon";
+
+                    if (!string.IsNullOrEmpty(KolonTipi))
+                    {
+                        var numara = (double)(y.GetValue(x) ?? 0);
+                        if (numara != 0)
+                        {
+                            cikanno = SLCikanNumaraListesi
+                                                        .Where(z => z.Numara == numara && z.KolonTipi == KolonTipi)
+                                                        .FirstOrDefault();
+                            if (cikanno == null)
+                            {
+                                var yeniNo = new CikanNumara()
+                                {
+                                    KolonTipi = KolonTipi,
+                                    Numara = numara,
+                                    CikmaAdati = Hafta,
+                                    CikmaSayisi = 1
+                                };
+                                SLCikanNumaraListesi.Add(yeniNo);
+                            }
+                            else
+                            {
+                                cikanno.CikmaSayisi++;
+                                cikanno.CikmaAdati += Hafta;
+                            }
+                        }
+                    }
+                });
+            });
+            return SLCikanNumaraListesi;
+        }
+
+        public static IEnumerable<string> getSLTumuAdat(List<CikanNumara> SLCikanNumaraListesi)
+        {
+            return SLCikanNumaraListesi
+                               .OrderBy(x => x.CikmaAdati / x.CikmaSayisi)
                                .Take(6)
                                .OrderBy(x => x.Numara)
                                .Select(x => x.Numara.ToString());
         }
-        public static IEnumerable<string> getTumuSayi(List<CSLCikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getSLTumuSayi(List<CikanNumara> SLCikanNumaraListesi)
         {
-            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Tumu")
+            return SLCikanNumaraListesi
                        .OrderBy(x => x.CikmaSayisi)
                        .Take(6)
                        .OrderBy(x => x.Numara)
-                       .Select(x => x.Numara.ToString());            
+                       .Select(x => x.Numara.ToString());
         }
-
-        //---
-        
-        
-        //---
-
     }
 }
 

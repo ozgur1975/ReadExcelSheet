@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ReadExcelSheet
 {
-    public class CSLCikanNumara
+    public class CikanNumara
     {        
         public string KolonTipi { get; set; }
         public double Numara { get; set; }
