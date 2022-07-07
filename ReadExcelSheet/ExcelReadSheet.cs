@@ -68,7 +68,11 @@ namespace ReadExcelSheet
 
             var KolonSayi = getCSLKolonSayi(CSLCikanNumaraListesi);            
             Console.WriteLine($"   ---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
-            
+
+            var KolonveJokersayi = getCSLKolonveJokerSayi(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Sayısına göre: {string.Join(",", KolonveJokersayi)}");
+
+
             ary = GetCSLSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);            
             Console.WriteLine($"   ---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
             
@@ -81,9 +85,9 @@ namespace ReadExcelSheet
             List<CikanNumara> SLCikanNumaraListesi = getSLCikanNumaraListesi(SLCekilisSonuclariListesi);
 
             var SLTumu = getSLTumuAdat(SLCikanNumaraListesi);
-            Console.WriteLine($"---Süper Loto En Az Çıkma Adatına göre: {string.Join(",", SLTumu)}");
+            Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre: {string.Join(",", SLTumu)}");
             SLTumu = getSLTumuSayi(SLCikanNumaraListesi);
-            Console.WriteLine($"---Süper Loto En Az Çıkma sayısına göre: {string.Join(",", SLTumu)}");
+            Console.WriteLine($"   ---Süper Loto En Az Çıkma sayısına göre: {string.Join(",", SLTumu)}");
 
             Console.ReadLine();
         }
@@ -103,7 +107,7 @@ namespace ReadExcelSheet
                         {
                             ConfigureDataTable = (_) => new ExcelDataTableConfiguration()
                             {
-                                UseHeaderRow = true
+                                UseHeaderRow = true,                                
                             }
                         }
                         );
@@ -138,14 +142,14 @@ namespace ReadExcelSheet
            .AsEnumerable()
            .Select(x => new SLCekilisSonucu
            {
-               Hafta = x.Field<double>(CSLKolonlari.Hafta.ToString()),
+               Hafta = x.Field<double>(SLKolonlari.Hafta.ToString()),
                Tarih = DateOnly.Parse(x.Field<DateTime>(CSLKolonlari.Tarih.ToString()).ToString("dd.MM.yyy")),
-               Kolon1 = x.Field<double>(CSLKolonlari.Kolon1.ToString()),
-               Kolon2 = x.Field<double>(CSLKolonlari.Kolon2.ToString()),
-               Kolon3 = x.Field<double>(CSLKolonlari.Kolon3.ToString()),
-               Kolon4 = x.Field<double>(CSLKolonlari.Kolon4.ToString()),
-               Kolon5 = x.Field<double>(CSLKolonlari.Kolon5.ToString()),
-               Kolon6 = x.Field<double>(CSLKolonlari.Kolon6.ToString())
+               Kolon1 = x.Field<double>(SLKolonlari.Kolon1.ToString()),
+               Kolon2 = x.Field<double>(SLKolonlari.Kolon2.ToString()),
+               Kolon3 = x.Field<double>(SLKolonlari.Kolon3.ToString()),
+               Kolon4 = x.Field<double>(SLKolonlari.Kolon4.ToString()),
+               Kolon5 = x.Field<double>(SLKolonlari.Kolon5.ToString()),
+               Kolon6 = x.Field<double>(SLKolonlari.Kolon6.ToString())
            })
            .ToList();
         }
@@ -243,8 +247,6 @@ namespace ReadExcelSheet
                 .Select(x => x.Numara.ToString());
 
         }
-
-
         public static IEnumerable<string> GetCSLSuperStarAdat(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
@@ -258,9 +260,7 @@ namespace ReadExcelSheet
                        .OrderBy(x => x.CikmaSayisi)
                        .Take(6)
                        .Select(x => x.Numara.ToString());            
-        }
-
-        
+        }     
 
         public static IEnumerable<string> getCSLTumuAdat(List<CikanNumara> CSLCikanNumaraListesi)
         {
