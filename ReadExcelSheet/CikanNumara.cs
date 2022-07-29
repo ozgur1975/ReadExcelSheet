@@ -11,7 +11,8 @@ namespace ReadExcelSheet
         public string KolonTipi { get; set; }
         public double Numara { get; set; }
         public double CikmaSayisi { get; set; }
-        public double CikmaAdati { get; set; }        
+        public double CikmaAdati { get; set; }
 
+        public double CikmaTarihAdati { get; set; }
     }
 }
