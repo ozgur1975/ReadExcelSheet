@@ -12,6 +12,7 @@ namespace ReadExcelSheet
         public double Numara { get; set; }
         public double CikmaSayisi { get; set; }
         public double CikmaAdati { get; set; }
+        public double KatSayi { get; set; }
 
         public double CikmaTarihAdati { get; set; }
     }
