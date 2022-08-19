@@ -50,12 +50,14 @@ namespace ReadExcelSheet
 
 
             var CSLSonNumaralar = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi.OrderByDescending(x => x.Tarih).Take(1).ToList());
-            //var SLSonNumaralar = getSLCikanNumaraListesi(SLCekilisSonuclariListesi.OrderByDescending(x => x.Tarih).Take(1).ToList());
+            var SLSonNumaralar = getSLCikanNumaraListesi(SLCekilisSonuclariListesi.OrderByDescending(x => x.Tarih).Take(1).ToList());
 
+            List<CikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi, CSLSonNumaralar);
+            List<CikanNumara> SLCikanNumaraListesi = getSLCikanNumaraListesi(SLCekilisSonuclariListesi, SLSonNumaralar);
 
             Console.WriteLine($"---Çılgın Sayısal Loto Hesaplanan Hafta: {CSLCekilisSonuclariListesi.Count}---");
 
-            List<CikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi, CSLSonNumaralar);
+            
 
             var KolonAdat = getCSLKolonAdat(CSLCikanNumaraListesi, CSLSonNumaralar);
             Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
@@ -102,8 +104,7 @@ namespace ReadExcelSheet
 
             Console.WriteLine("");
             Console.WriteLine($"---Süper Loto Hesaplanan Hafta: {SLCekilisSonuclariListesi.Count}---");
-
-            List<CikanNumara> SLCikanNumaraListesi = getSLCikanNumaraListesi(SLCekilisSonuclariListesi);
+            
 
             var SLTumu = getSLTumuAdat(SLCikanNumaraListesi);
             Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre: {string.Join(",", SLTumu)}");
@@ -455,7 +456,7 @@ namespace ReadExcelSheet
                 .Select(x => x.Numara.ToString());
         }
 
-        public static List<CikanNumara> getSLCikanNumaraListesi(List<SLCekilisSonucu> SLCekilisSonuclariListesi)
+        public static List<CikanNumara> getSLCikanNumaraListesi(List<SLCekilisSonucu> SLCekilisSonuclariListesi, List<CikanNumara>? SLSonNumara = null)
         {
             List<CikanNumara> SLCikanNumaraListesi = new List<CikanNumara>();
 
@@ -480,9 +481,9 @@ namespace ReadExcelSheet
 
                     if (!string.IsNullOrEmpty(KolonTipi))
                     {
-                        var numara = (double)(y.GetValue(x) ?? 0);
-                        if (numara != 0)
-                        {
+                        var numara = (double)(y.GetValue(x) ?? 0);                        
+                            if (numara != 0 && (!SLSonNumara?.Any(x => x.Numara == numara) ?? true))
+                            {
                             cikanno = SLCikanNumaraListesi
                                                         .Where(z => z.Numara == numara && z.KolonTipi == KolonTipi)
                                                         .FirstOrDefault();
