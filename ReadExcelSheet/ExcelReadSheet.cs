@@ -262,15 +262,7 @@ namespace ReadExcelSheet
         }
 
         public static IEnumerable<string> getCSLKolonAdatTarih(List<CikanNumara> CSLCikanNumaraListesi)
-        {
-            var test = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
-                   //.OrderBy(x => x.CikmaTarihAdati)
-                   //.Take(6)
-                   //.OrderBy(x => x.Numara)
-                   //.Select(x => x.Numara.ToString());
-                   .ToList();
-
+        {           
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
                    .OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
                    //.OrderBy(x => x.CikmaTarihAdati)
