@@ -1,5 +1,6 @@
 ﻿using ExcelDataReader;
 using System.Data;
+using System.Linq;
 
 namespace ReadExcelSheet
 {
@@ -59,67 +60,77 @@ namespace ReadExcelSheet
 
             
 
-            var KolonAdat = getCSLKolonAdat(CSLCikanNumaraListesi, CSLSonNumaralar);
-            Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
+            //var KolonAdat = getCSLKolonAdat(CSLCikanNumaraListesi, CSLSonNumaralar);
+            //Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre: {string.Join(",", KolonAdat)}");
 
-            KolonAdat = getCSLKolonAdatTarih(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre Tarih : {string.Join(",", KolonAdat)}");
+            //var KolonAdat = getCSLKolonAdatTarih(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre Tarih : {string.Join(",", KolonAdat)}");
 
-            KolonAdat = getCSLKolonAdatDagitimli(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre dağılımlı: {string.Join(",", KolonAdat)}");
+            //KolonAdat = getCSLKolonAdatDagitimli(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre dağılımlı: {string.Join(",", KolonAdat)}");
 
 
-            var KolonveJokerAdat = getCSLKolonveJokerAdat(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre: {string.Join(",", KolonveJokerAdat)}");
+            //var KolonveJokerAdat = getCSLKolonveJokerAdat(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre: {string.Join(",", KolonveJokerAdat)}");
 
-            KolonveJokerAdat = getCSLKolonveJokerAdatTariih(CSLCikanNumaraListesi);
+            var KolonveJokerAdat = getCSLKolonveJokerAdatTariih(CSLCikanNumaraListesi);
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Tarih: {string.Join(",", KolonveJokerAdat)}");
 
-            KolonveJokerAdat = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Dağitimli: {string.Join(",", KolonveJokerAdat)}");
+            //KolonveJokerAdat = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Dağitimli: {string.Join(",", KolonveJokerAdat)}");
 
-            var ary = GetCSLSuperStarAdat(CSLCikanNumaraListesi, KolonAdat);
-            Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
+            //var ary = GetCSLSuperStarAdat(CSLCikanNumaraListesi, KolonveJokerAdat);
+            //Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
 
-            ary = GetCSLSuperStarAdatTarih(CSLCikanNumaraListesi, KolonAdat);
+            var ary = GetCSLSuperStarAdatTarih(CSLCikanNumaraListesi, KolonveJokerAdat);
             Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre Tarih: {string.Join(",", ary)}");
 
-            var Tumu = getCSLTumuAdat(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Tümü  En Az Çıkma Adatına göre: {string.Join(",", Tumu)}");
+            //var Tumu = getCSLTumuAdat(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Tümü  En Az Çıkma Adatına göre: {string.Join(",", Tumu)}");
 
             Console.WriteLine("");
 
-            var KolonSayi = getCSLKolonSayi(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
+            //var KolonSayi = getCSLKolonSayi(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Kolon En Az Çıkma Sayısına göre: {string.Join(",", KolonSayi)}");
 
-            var KolonveJokersayi = getCSLKolonveJokerSayi(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Sayısına göre: {string.Join(",", KolonveJokersayi)}");
+            //var KolonveJokersayi = getCSLKolonveJokerSayi(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Sayısına göre: {string.Join(",", KolonveJokersayi)}");
 
 
-            ary = GetCSLSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);
-            Console.WriteLine($"   ---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+            //ary = GetCSLSuperStarSayi(CSLCikanNumaraListesi, KolonSayi);
+            //Console.WriteLine($"   ---SuperStar En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
 
-            ary = getCSLTumuSayi(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
+            //ary = getCSLTumuSayi(CSLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Tümü  En Az Çıkma Sayısına göre: {string.Join(",", ary)}");
 
             Console.WriteLine("");
             Console.WriteLine($"---Süper Loto Hesaplanan Hafta: {SLCekilisSonuclariListesi.Count}---");
             
 
-            var SLTumu = getSLTumuAdat(SLCikanNumaraListesi);
-            Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre: {string.Join(",", SLTumu)}");
+            //var SLTumu = getSLTumuAdat(SLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre: {string.Join(",", SLTumu)}");
 
-            SLTumu = getSLTumuAdatTarih(SLCikanNumaraListesi);
-            Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Tarih: {string.Join(",", SLTumu)}");
+            var SLTumuEnAz = getSLTumuAdatTarih(SLCikanNumaraListesi);
+            
+            var SLTumuEnCok = getSLTumuAdatTarihEncok(SLCikanNumaraListesi);
+            Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Tarih: {string.Join(",", SLTumuEnAz)} ({string.Join(",", SLTumuEnCok)}) ");
 
-            SLTumu = getSLTumuAdatDagitimli(SLCikanNumaraListesi);
-            Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Dağıtımlı: {string.Join(",", SLTumu)}");
 
-            SLTumu = getSLTumuAdatCarpma(SLCikanNumaraListesi);
-            Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Çarpma: {string.Join(",", SLTumu)}");
+            var enazlst = SLTumuEnCok.ToList();
+            enazlst.AddRange(SLTumuEnAz);
 
-            SLTumu = getSLTumuSayi(SLCikanNumaraListesi);
-            Console.WriteLine($"   ---Süper Loto En Az Çıkma sayısına göre: {string.Join(",", SLTumu)}");
+            Kombinasyon.Kombinasyonlar(enazlst, 6);
+            
+
+
+            //SLTumu = getSLTumuAdatDagitimli(SLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Dağıtımlı: {string.Join(",", SLTumu)}");
+
+            //SLTumu = getSLTumuAdatCarpma(SLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Çarpma: {string.Join(",", SLTumu)}");
+
+            //SLTumu = getSLTumuSayi(SLCikanNumaraListesi);
+            //Console.WriteLine($"   ---Süper Loto En Az Çıkma sayısına göre: {string.Join(",", SLTumu)}");
 
             Console.ReadLine();
         }
@@ -264,8 +275,9 @@ namespace ReadExcelSheet
         public static IEnumerable<string> getCSLKolonAdatTarih(List<CikanNumara> CSLCikanNumaraListesi)
         {           
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
-                   .OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
+                   //.OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
                    //.OrderBy(x => x.CikmaTarihAdati)
+                   .OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi))
                    .Take(6)
                    .OrderBy(x => x.Numara)
                    .Select(x => x.Numara.ToString());
@@ -281,7 +293,8 @@ namespace ReadExcelSheet
                        .OrderBy(x => x.Numara)
                        .Skip(i * 15)
                        .Take(15) //ilk 15
-                                 .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                                 //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                                 .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                        //.OrderBy(x => x.CikmaAdati)
                        .Take(1)
                        .Select(x => x.Numara.ToString()).FirstOrDefault(""));
@@ -310,7 +323,8 @@ namespace ReadExcelSheet
                     KatSayi = group.Sum(item => item.KatSayi)
                 }
                                         )
-                   .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                    //.OrderBy(x => x.CikmaAdati)
                    .Take(6)
                    .OrderBy(x => x.Numara)
@@ -324,15 +338,13 @@ namespace ReadExcelSheet
                 .GroupBy(x => x.Numara)
                 .Select(group => new
                 {
-                    Numara = group.Key
-                                ,
-                    CikmaAdati = group.Sum(item => item.CikmaTarihAdati)
-                                ,
-                    CikmaSayisi = group.Sum(item => item.CikmaSayisi)
-                                ,
+                    Numara = group.Key,
+                    CikmaAdati = group.Sum(item => item.CikmaTarihAdati),
+                    CikmaSayisi = group.Sum(item => item.CikmaSayisi),
                     KatSayi = group.Sum(item => item.KatSayi)
                 })
-                   .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                    //.OrderBy(x => x.CikmaAdati)
                    .Take(6)
                    .OrderBy(x => x.Numara)
@@ -358,7 +370,8 @@ namespace ReadExcelSheet
                 .OrderBy(x => x.Numara)
                 .Skip(i * 15)
                 .Take(15)
-                .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                 //.OrderBy(x => x.CikmaAdati)
                 .Take(1)
                 .Select(x => x.Numara.ToString()).FirstOrDefault(""));
@@ -374,12 +387,9 @@ namespace ReadExcelSheet
                 .GroupBy(x => x.Numara)
                 .Select(group => new
                 {
-                    Numara = group.Key
-                                    ,
-                    CikmaAdati = group.Sum(item => item.CikmaAdati)
-                                    ,
-                    CikmaSayisi = group.Sum(item => item.CikmaSayisi)
-                                    ,
+                    Numara = group.Key,
+                    CikmaAdati = group.Sum(item => item.CikmaAdati),
+                    CikmaSayisi = group.Sum(item => item.CikmaSayisi),
                     KatSayi = group.Sum(item => item.KatSayi)
                 })
                 .OrderBy(x => x.CikmaSayisi)
@@ -391,7 +401,8 @@ namespace ReadExcelSheet
         public static IEnumerable<string> GetCSLSuperStarAdat(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
-                               .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                               //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                               .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                                //.OrderBy(x => x.CikmaAdati)
                                .Take(6)
                                .Select(x => x.Numara.ToString());
@@ -400,7 +411,8 @@ namespace ReadExcelSheet
         public static IEnumerable<string> GetCSLSuperStarAdatTarih(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> KolonAdat)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == CSLKolonlari.SuperStar.ToString() && !KolonAdat.Any(a => a == x.Numara.ToString()))
-                               .OrderBy(x => x.CikmaTarihAdati / x.KatSayi)
+                               //.OrderBy(x => x.CikmaTarihAdati / x.KatSayi)
+                               .OrderBy(x => x.CikmaTarihAdati)
                                //.OrderBy(x => x.CikmaTarihAdati)
                                .Take(6)
                                .Select(x => x.Numara.ToString());
@@ -425,7 +437,7 @@ namespace ReadExcelSheet
                     CikmaSayisi = group.Sum(item => item.CikmaSayisi),
                     KatSayi = group.Sum(item => item.CikmaSayisi)
                 })
-                .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                 //.OrderBy(x => x.CikmaAdati)
                 .Take(6)
                 .OrderBy(x => x.Numara)
@@ -509,7 +521,8 @@ namespace ReadExcelSheet
         public static IEnumerable<string> getSLTumuAdat(List<CikanNumara> SLCikanNumaraListesi)
         {
             return SLCikanNumaraListesi
-                               .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                               //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                               .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                                //.OrderBy(x => x.CikmaAdati)
                                .Take(6)
                                .OrderBy(x => x.Numara)
@@ -519,9 +532,21 @@ namespace ReadExcelSheet
         public static IEnumerable<string> getSLTumuAdatTarih(List<CikanNumara> SLCikanNumaraListesi)
         {
             return SLCikanNumaraListesi
-                               .OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
+                               //.OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
+                               .OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi))
                                //.OrderBy(x => x.CikmaTarihAdati)
                                .Take(6)
+                               .OrderBy(x => x.Numara)
+                               .Select(x => x.Numara.ToString());
+        }
+
+        public static IEnumerable<string> getSLTumuAdatTarihEncok(List<CikanNumara> SLCikanNumaraListesi)
+        {
+            return SLCikanNumaraListesi
+                               //.OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
+                               .OrderByDescending(x => (x.CikmaTarihAdati / x.CikmaSayisi))
+                               //.OrderBy(x => x.CikmaTarihAdati)
+                               .Take(1)
                                .OrderBy(x => x.Numara)
                                .Select(x => x.Numara.ToString());
         }
@@ -545,7 +570,8 @@ namespace ReadExcelSheet
                                .OrderBy(x => x.Numara)
                                .Skip(i * 10)
                                .Take(10)
-                               .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                               //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                               .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
                                //.OrderBy(x => x.CikmaAdati)
                                .Take(1)
                                .Select(x => x.Numara.ToString()).FirstOrDefault(""));
