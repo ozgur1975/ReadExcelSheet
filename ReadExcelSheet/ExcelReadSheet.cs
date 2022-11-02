@@ -112,7 +112,7 @@ namespace ReadExcelSheet
 
             var SLTumuEnAz = getSLTumuAdatTarih(SLCikanNumaraListesi);
             
-            var SLTumuEnCok = getSLTumuAdatTarihEncok(SLCikanNumaraListesi);
+            var SLTumuEnCok = getSLTumuAdatTarihEncok(SLCikanNumaraListesi,6);
             Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Tarih: {string.Join(",", SLTumuEnAz)} ({string.Join(",", SLTumuEnCok)}) ");
 
 
@@ -540,14 +540,14 @@ namespace ReadExcelSheet
                                .Select(x => x.Numara.ToString());
         }
 
-        public static IEnumerable<string> getSLTumuAdatTarihEncok(List<CikanNumara> SLCikanNumaraListesi)
+        public static IEnumerable<string> getSLTumuAdatTarihEncok(List<CikanNumara> SLCikanNumaraListesi, int take = 1)
         {
             return SLCikanNumaraListesi
                                //.OrderBy(x => (x.CikmaTarihAdati / x.CikmaSayisi) * x.KatSayi)
                                .OrderByDescending(x => (x.CikmaTarihAdati / x.CikmaSayisi))
                                //.OrderBy(x => x.CikmaTarihAdati)
-                               .Take(1)
-                               .OrderBy(x => x.Numara)
+                               .Take(take)
+                               //.OrderBy(x => x.Numara)
                                .Select(x => x.Numara.ToString());
         }
 

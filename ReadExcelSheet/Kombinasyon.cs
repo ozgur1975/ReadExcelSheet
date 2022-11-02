@@ -12,7 +12,9 @@ namespace ReadExcelSheet
 
         static IEnumerable<IEnumerable<T>>GetKCombs<T>(IEnumerable<T> list, int length) where T : IComparable
         {
-            if (length == 1) return list.Select(t => new T[] { t });
+            if (length == 1) 
+                return list.Select(t => new T[] { t });
+
             return GetKCombs(list, length - 1)
                 .SelectMany(t => list.Where(o => o.CompareTo(t.Last()) > 0),
                     (t1, t2) => t1.Concat(new T[] { t2 }));
@@ -21,6 +23,8 @@ namespace ReadExcelSheet
         public static void Kombinasyonlar(IEnumerable<string> sayilar, int uyeSayisi)
         {
             var r2 = GetKCombs<string>(sayilar, uyeSayisi);
+
+            Console.WriteLine($"Kombinasyon sayısı {r2.Count()}");
 
             r2.ToList()
                 .ForEach(x=> Console.WriteLine(string.Join(",",x.ToArray()))
