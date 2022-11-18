@@ -94,8 +94,8 @@ namespace ReadExcelSheet
             var KolonveJokerAdat = getCSLKolonveJokerAdatTariih(CSLCikanNumaraListesi);
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Tarih: {string.Join(",", KolonveJokerAdat)}");
 
-            //KolonveJokerAdat = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
-            //Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Dağitimli: {string.Join(",", KolonveJokerAdat)}");
+            KolonveJokerAdat = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Dağitimli: {string.Join(",", KolonveJokerAdat)}");
 
             //var ary = GetCSLSuperStarAdat(CSLCikanNumaraListesi, KolonveJokerAdat);
             //Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
