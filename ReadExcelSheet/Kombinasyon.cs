@@ -20,12 +20,13 @@ namespace ReadExcelSheet
                     (t1, t2) => t1.Concat(new T[] { t2 }));
         }
 
-        public static void Kombinasyonlar(IEnumerable<string> sayilar, int uyeSayisi)
+        public static void Kombinasyonlar(IEnumerable<string> sayilar, int uyeSayisi, bool yaz)
         {
             var r2 = GetKCombs<string>(sayilar, uyeSayisi);
 
             Console.WriteLine($"Kombinasyon sayısı {r2.Count()}");
 
+            if(yaz)
             r2.ToList()
                 .ForEach(x=> Console.WriteLine(string.Join(",",x.ToArray()))
                 );

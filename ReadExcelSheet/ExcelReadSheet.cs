@@ -133,11 +133,9 @@ namespace ReadExcelSheet
             var SLTumuEnCok = getSLTumuAdatTarihEncok(SLCikanNumaraListesi, 6);
             Console.WriteLine($"   ---Süper Loto En Az Çıkma Adatına göre Tarih: {string.Join(",", SLTumuEnAz)} ({string.Join(",", SLTumuEnCok)}) ");
 
-
-            //var enazlst = SLTumuEnCok.ToList();
-            //enazlst.AddRange(SLTumuEnAz);
-
-            //Kombinasyon.Kombinasyonlar(enazlst, 6);
+            var enazlst = SLTumuEnCok.ToList();
+            enazlst.AddRange(SLTumuEnAz);
+            Kombinasyon.Kombinasyonlar(enazlst, 6,false);
 
             Console.WriteLine("");
             Console.WriteLine($"---Şans Topu Hesaplanan Hafta: {STCekilisSonuclariListesi.Count}---");
