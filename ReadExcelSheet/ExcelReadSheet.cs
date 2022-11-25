@@ -72,7 +72,7 @@ namespace ReadExcelSheet
 
             List<CikanNumara> CSLCikanNumaraListesi = getCSLCikanNumaraListesi(CSLCekilisSonuclariListesi, CSLSonNumaralar);
             List<CikanNumara> SLCikanNumaraListesi = getSLCikanNumaraListesi(SLCekilisSonuclariListesi, SLSonNumaralar);
-            List<CikanNumara> STCikanNumaraListesi = getSTCikanNumaraListesi(STCekilisSonuclariListesi, CSLSonNumaralar);
+            List<CikanNumara> STCikanNumaraListesi = getSTCikanNumaraListesi(STCekilisSonuclariListesi, STSonNumaralar);
 
             Console.WriteLine($"---Çılgın Sayısal Loto Hesaplanan Hafta: {CSLCekilisSonuclariListesi.Count}---");
 
