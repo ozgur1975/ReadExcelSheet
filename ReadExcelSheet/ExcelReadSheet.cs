@@ -140,7 +140,14 @@ namespace ReadExcelSheet
             Console.WriteLine("");
             Console.WriteLine($"---Şans Topu Hesaplanan Hafta: {STCekilisSonuclariListesi.Count}---");
             var STKolonAdat = getSTKolonAdatTarih(STCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre Tarih: {string.Join(",", STKolonAdat)}");
+            var STKolonAdatEnCok = getSTKolonAdatTarihEnCok(STCikanNumaraListesi);           
+            Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre Tarih: {string.Join(",", STKolonAdat)} ({string.Join(",", STKolonAdatEnCok)})");
+            var stenazlst = STKolonAdat.ToList();
+            stenazlst.AddRange(STKolonAdatEnCok);
+            Kombinasyon.Kombinasyonlar(stenazlst, 5, false);
+
+
+
             STKolonAdat = getSTSansTopuAdatTarih(STCikanNumaraListesi);
             Console.WriteLine($"   ---Şans Topu En Az Çıkma Adatına göre Tarih: {string.Join(",", STKolonAdat)}");
 
@@ -471,6 +478,25 @@ namespace ReadExcelSheet
                    //.OrderBy(x => x.CikmaAdati)
                    .Take(5)
                    .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+
+        }
+        public static IEnumerable<string> getSTKolonAdatTarihEnCok(List<CikanNumara> StCikanNumaraListesi)
+        {
+            return StCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon")
+                .GroupBy(x => x.Numara)
+                .Select(group => new
+                {
+                    Numara = group.Key,
+                    CikmaAdati = group.Sum(item => item.CikmaTarihAdati),
+                    CikmaSayisi = group.Sum(item => item.CikmaSayisi),
+                    KatSayi = group.Sum(item => item.KatSayi)
+                })
+                   //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   .OrderByDescending(x => (x.CikmaAdati / x.CikmaSayisi))
+                   //.OrderBy(x => x.CikmaAdati)
+                   .Take(5)
+                   
                    .Select(x => x.Numara.ToString());
 
         }
