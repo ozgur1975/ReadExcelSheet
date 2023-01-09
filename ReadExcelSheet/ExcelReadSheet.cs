@@ -142,9 +142,9 @@ namespace ReadExcelSheet
             var STKolonAdat = getSTKolonAdatTarih(STCikanNumaraListesi);
             var STKolonAdatEnCok = getSTKolonAdatTarihEnCok(STCikanNumaraListesi);           
             Console.WriteLine($"   ---Kolon En Az Çıkma Adatına göre Tarih: {string.Join(",", STKolonAdat)} ({string.Join(",", STKolonAdatEnCok)})");
-            var stenazlst = STKolonAdat.ToList();
-            stenazlst.AddRange(STKolonAdatEnCok);
-            Kombinasyon.Kombinasyonlar(stenazlst, 5, false);
+            //var stenazlst = STKolonAdat.ToList();
+            //stenazlst.AddRange(STKolonAdatEnCok);
+            //Kombinasyon.Kombinasyonlar(stenazlst, 5, true);
 
 
 

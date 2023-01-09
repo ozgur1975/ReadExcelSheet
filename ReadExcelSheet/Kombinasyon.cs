@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,11 +26,9 @@ namespace ReadExcelSheet
             var r2 = GetKCombs<string>(sayilar, uyeSayisi);
 
             Console.WriteLine($"Kombinasyon sayısı {r2.Count()}");
-
-            if(yaz)
-            r2.ToList()
-                .ForEach(x=> Console.WriteLine(string.Join(",",x.ToArray()))
-                );
+            int ikitutan = 0;
+            if (yaz)
+                r2.ToList().ForEach(x =>Console.WriteLine(string.Join(",", x.ToArray()))); 
         }
     }
 }
