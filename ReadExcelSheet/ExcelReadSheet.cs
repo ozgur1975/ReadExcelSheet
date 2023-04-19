@@ -91,17 +91,26 @@ namespace ReadExcelSheet
             //var KolonveJokerAdat = getCSLKolonveJokerAdat(CSLCikanNumaraListesi);
             //Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre: {string.Join(",", KolonveJokerAdat)}");
 
-            var KolonveJokerAdat = getCSLKolonveJokerAdatTariih(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Tarih: {string.Join(",", KolonveJokerAdat)}");
+            var KolonveJokerAdat = getCSLKolonveJokerAdatTarih(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT: {string.Join(",", KolonveJokerAdat)}");
 
-            KolonveJokerAdat = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
-            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma Adatına göre Dağitimli: {string.Join(",", KolonveJokerAdat)}");
+            var KolonveJokersayi = getCSLKolonveJokerCikmaSayisi(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma SAYI: {string.Join(",", KolonveJokersayi)}");
+            
+
+            var KolonveJokerAdatdagitim = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT Dağıtım: {string.Join(",", KolonveJokerAdatdagitim)}");
+
+            var KolonveJokerAdatAzCok = getCSLKolonveJokerAdatEncokEnAz(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokersayi).Concat(KolonveJokerAdatdagitim));
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT Az Çok: {string.Join(",", KolonveJokerAdatAzCok)}");
+
+            
 
             //var ary = GetCSLSuperStarAdat(CSLCikanNumaraListesi, KolonveJokerAdat);
             //Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
 
             var ary = GetCSLSuperStarAdatTarih(CSLCikanNumaraListesi, KolonveJokerAdat);
-            Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre Tarih: {string.Join(",", ary)}");
+            Console.WriteLine($"   ---SuperStar En Az Çıkma ADAT: {string.Join(",", ary)}");
 
             //var Tumu = getCSLTumuAdat(CSLCikanNumaraListesi);
             //Console.WriteLine($"   ---Tümü  En Az Çıkma Adatına göre: {string.Join(",", Tumu)}");
@@ -442,7 +451,7 @@ namespace ReadExcelSheet
 
         }
 
-        public static IEnumerable<string> getCSLKolonveJokerAdatTariih(List<CikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getCSLKolonveJokerAdatTarih(List<CikanNumara> CSLCikanNumaraListesi)
         {
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
                 .GroupBy(x => x.Numara)
@@ -455,6 +464,67 @@ namespace ReadExcelSheet
                 })
                    //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
                    .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
+                   //.OrderBy(x => x.CikmaAdati)
+                   .Take(6)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString());
+
+        }
+
+        public static IEnumerable<string> getCSLKolonveJokerAdatEncokEnAz(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> DahilEtme)
+        {
+           var enaz =  CSLCikanNumaraListesi.Where(x => (x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString()) && !DahilEtme.Any(a => a == x.Numara.ToString()))
+                .GroupBy(x => x.Numara)
+                .Select(group => new
+                {
+                    Numara = group.Key,
+                    CikmaAdati = group.Sum(item => item.CikmaTarihAdati),
+                    CikmaSayisi = group.Sum(item => item.CikmaSayisi),
+                    KatSayi = group.Sum(item => item.KatSayi)
+                })
+                   //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi))
+                   //.OrderBy(x => x.CikmaAdati)
+                   .Take(3)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString())
+                   .ToList();
+
+            var encok = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
+                .GroupBy(x => x.Numara)
+                .Select(group => new
+                {
+                    Numara = group.Key,
+                    CikmaAdati = group.Sum(item => item.CikmaTarihAdati),
+                    CikmaSayisi = group.Sum(item => item.CikmaSayisi),
+                    KatSayi = group.Sum(item => item.KatSayi)
+                })
+                   //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   .OrderByDescending(x => (x.CikmaAdati / x.CikmaSayisi))
+                   //.OrderBy(x => x.CikmaAdati)
+                   .Take(3)
+                   .OrderBy(x => x.Numara)
+                   .Select(x => x.Numara.ToString())
+                   .ToList();
+
+            return enaz.Concat(encok);
+            
+
+        }
+
+        public static IEnumerable<string> getCSLKolonveJokerCikmaSayisi(List<CikanNumara> CSLCikanNumaraListesi)
+        {
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
+                .GroupBy(x => x.Numara)
+                .Select(group => new
+                {
+                    Numara = group.Key,
+                    CikmaAdati = group.Sum(item => item.CikmaTarihAdati),
+                    CikmaSayisi = group.Sum(item => item.CikmaSayisi),
+                    KatSayi = group.Sum(item => item.KatSayi)
+                })
+                   //.OrderBy(x => (x.CikmaAdati / x.CikmaSayisi) * x.KatSayi)
+                   .OrderBy(x => x.CikmaSayisi)
                    //.OrderBy(x => x.CikmaAdati)
                    .Take(6)
                    .OrderBy(x => x.Numara)
