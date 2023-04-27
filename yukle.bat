@@ -1,9 +1,9 @@
 
-set Tarih = %date:.=%
 
 
 git add .
-git commit -a -m '%Tarih%'
+git commit -a -m 'Excel'
 git push
+
 
  timeout /t 10
