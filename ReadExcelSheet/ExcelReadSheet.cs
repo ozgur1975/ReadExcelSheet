@@ -94,11 +94,11 @@ namespace ReadExcelSheet
             var KolonveJokerAdat = getCSLKolonveJokerAdatTarih(CSLCikanNumaraListesi);
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT: {string.Join(",", KolonveJokerAdat)}");
 
-            var KolonveJokersayi = getCSLKolonveJokerCikmaSayisi(CSLCikanNumaraListesi);
+            var KolonveJokersayi = getCSLKolonveJokerCikmaSayisi(CSLCikanNumaraListesi, KolonveJokerAdat);
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma SAYI: {string.Join(",", KolonveJokersayi)}");
             
 
-            var KolonveJokerAdatdagitim = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi);
+            var KolonveJokerAdatdagitim = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokersayi));
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT Dağıtım: {string.Join(",", KolonveJokerAdatdagitim)}");
 
             var KolonveJokerAdatAzCok = getCSLKolonveJokerAdatEncokEnAz(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokersayi).Concat(KolonveJokerAdatdagitim));
@@ -512,9 +512,10 @@ namespace ReadExcelSheet
 
         }
 
-        public static IEnumerable<string> getCSLKolonveJokerCikmaSayisi(List<CikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getCSLKolonveJokerCikmaSayisi(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> DahilEtme )
         {
-            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
+            
+            return CSLCikanNumaraListesi.Where(x => (x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString()) && !DahilEtme.Any(a => a == x.Numara.ToString()))
                 .GroupBy(x => x.Numara)
                 .Select(group => new
                 {
@@ -587,14 +588,14 @@ namespace ReadExcelSheet
                    .Select(x => x.Numara.ToString());
 
         }
-        public static IEnumerable<string> getCSLKolonveJokerAdatDagitimli(List<CikanNumara> CSLCikanNumaraListesi)
+        public static IEnumerable<string> getCSLKolonveJokerAdatDagitimli(List<CikanNumara> CSLCikanNumaraListesi, IEnumerable<string> DahilEtme)
         {
 
             List<string> numaralar = new List<string>();
 
             for (int i = 0; i < 6; i++)
 
-                numaralar.Add(CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString())
+                numaralar.Add(CSLCikanNumaraListesi.Where(x => (x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.SuperStar.ToString()) && !DahilEtme.Any(a => a == x.Numara.ToString()))
                 .GroupBy(x => x.Numara)
                 .Select(group => new
                 {
