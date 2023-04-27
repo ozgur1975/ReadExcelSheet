@@ -97,7 +97,6 @@ namespace ReadExcelSheet
             var KolonveJokersayi = getCSLKolonveJokerCikmaSayisi(CSLCikanNumaraListesi, KolonveJokerAdat);
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma SAYI: {string.Join(",", KolonveJokersayi)}");
             
-
             var KolonveJokerAdatdagitim = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokersayi));
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT Dağıtım: {string.Join(",", KolonveJokerAdatdagitim)}");
 
