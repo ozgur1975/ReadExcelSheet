@@ -452,7 +452,11 @@ namespace ReadExcelSheet
 
         public static IEnumerable<string> getCSLKolonveJokerAdatTarih(List<CikanNumara> CSLCikanNumaraListesi)
         {
-            return CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.Joker.ToString())
+
+            
+            
+
+            return CSLCikanNumaraListesi.Where(x => x.KolonTipi ==  "Kolon" || x.KolonTipi == CSLKolonlari.Joker.ToString())
                 .GroupBy(x => x.Numara)
                 .Select(group => new
                 {
