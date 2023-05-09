@@ -94,16 +94,17 @@ namespace ReadExcelSheet
             var KolonveJokerAdat = getCSLKolonveJokerAdatTarih(CSLCikanNumaraListesi);
             Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT: {string.Join(",", KolonveJokerAdat)}");
 
-            var KolonveJokersayi = getCSLKolonveJokerCikmaSayisi(CSLCikanNumaraListesi, KolonveJokerAdat);
-            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma SAYI: {string.Join(",", KolonveJokersayi)}");
             
             //var KolonveJokerAdatdagitim = getCSLKolonveJokerAdatDagitimli(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokersayi));
             //Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma ADAT Dağıtım: {string.Join(",", KolonveJokerAdatdagitim)}");
 
-            var KolonveJokerAdatAzCok = getCSLKolonveJokerAdatEncokEnAz(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokersayi));
+            var KolonveJokerAdatAzCok = getCSLKolonveJokerAdatEncokEnAz(CSLCikanNumaraListesi, KolonveJokerAdat);
             Console.WriteLine($"   ---Kolon ve Joker En Az, En Çok Çıkma ADAT: {string.Join(",", KolonveJokerAdatAzCok)}");
 
-            
+            var KolonveJokersayi = getCSLKolonveJokerCikmaSayisi(CSLCikanNumaraListesi, KolonveJokerAdat.Concat(KolonveJokerAdatAzCok));
+            Console.WriteLine($"   ---Kolon ve Joker En Az Çıkma SAYI: {string.Join(",", KolonveJokersayi)}");
+
+
 
             var ary = GetCSLSuperStarAdat(CSLCikanNumaraListesi, KolonveJokerAdat);
             Console.WriteLine($"   ---SuperStar En Az Çıkma Adatına göre: {string.Join(",", ary)}");
