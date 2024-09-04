@@ -453,9 +453,19 @@ namespace ReadExcelSheet
 
         public static IEnumerable<string> getCSLKolonveJokerAdatTarih(List<CikanNumara> CSLCikanNumaraListesi)
         {
+            var aaaa = CSLCikanNumaraListesi.Where(x => x.KolonTipi == "Kolon" || x.KolonTipi == CSLKolonlari.Joker.ToString())
+                 .GroupBy(x => x.Numara)
+                 .Select(group => new
+                 {
+                     Numara = group.Key,
+                     CikmaAdati = group.Sum(item => item.CikmaTarihAdati),
+                     CikmaSayisi = group.Sum(item => item.CikmaSayisi),
+                     KatSayi = group.Sum(item => item.KatSayi)
+                 })
+                    .OrderBy(x => (x.CikmaAdati / x.CikmaSayisi)).ToList();
 
-            
-            
+
+
 
             return CSLCikanNumaraListesi.Where(x => x.KolonTipi ==  "Kolon" || x.KolonTipi == CSLKolonlari.Joker.ToString())
                 .GroupBy(x => x.Numara)
